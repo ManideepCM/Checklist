@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task List</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://kit.fontawesome.com/7760513aa3.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <img src="Images/tasks.png" alt="None" />
+        <h1>Checklist</h1>
+      </header>
+      <form id="task-form">
+        <div class="form-control">
+          <input
+            type="text"
+            class="form-input"
+            id="task-input"
+            name="task"
+            placeholder="Enter a task"
+          />
+        </div>
+        <div class="form-control">
+          <button type="submit" class="btn">+Add Item</button>
+        </div>
+      </form>
+      <div class="filter">
+        <input
+          type="text"
+          class="form-input-filter"
+          id="filter"
+          placeholder="Filter Items"
+        />
+      </div>
+
+      <ul id="task-list" class="tasks">
+        <li>
+          Solve Problems
+          <button class="remove-item btn-link text-red">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </li>
+        <li>
+          Build Websites
+          <button class="remove-item btn-link text-red">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </li>
+        <li>
+          Prepare OS , DBMS
+          <button class="remove-item btn-link text-red">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </li>
+        <li>
+          Check Email
+          <button class="remove-item btn-link text-red">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </li>
+      </ul>
+
+      <button id="clear" class="btn-clear">Clear All</button>
+    </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
