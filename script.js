@@ -4,6 +4,12 @@ const taskList = document.querySelector('#task-list')
 const clearAll = document.querySelector('#clear')
 const filter = document.querySelector('#filter')
 
+function displayTasks() {
+  const tasksFromStorage = getTaskFromStorage()
+  tasksFromStorage.forEach((task) => addToDOM(task))
+  checkUI()
+}
+
 function addTask(e) {
   e.preventDefault()
   const task = taskInput.value
@@ -11,22 +17,34 @@ function addTask(e) {
     alert('Please Enter Any Task !')
     return
   }
+  addToDOM(task)
+  addToLocalStorage(task)
+  checkUI()
+  taskInput.value = ''
+}
 
+function addToDOM(task) {
   const li = document.createElement('li')
   li.appendChild(document.createTextNode(task))
-  const button = createButton('remove-task btn-link text-red')
+  const button = createButton('remove-task btn-link text-green')
 
   li.appendChild(button)
 
   taskList.appendChild(li)
-  checkUI()
-  taskInput.value = ''
+}
+
+function addToLocalStorage(task) {
+  let localStorageTasks = getTaskFromStorage()
+  localStorageTasks.push(task)
+
+  // Stringify the array
+  localStorage.setItem('tasks', JSON.stringify(localStorageTasks))
 }
 
 function createButton(classes) {
   const button = document.createElement('button')
   button.className = classes
-  const icon = createIcon('fa-solid fa-xmark')
+  const icon = createIcon('fa-solid fa-check')
   button.appendChild(icon)
   return button
 }
@@ -37,17 +55,46 @@ function createIcon(classes) {
   return icon
 }
 
-function removeTask(e) {
-  if (e.target.parentElement.classList.contains('remove-task')) {
-    e.target.parentElement.parentElement.remove()
+function getTaskFromStorage() {
+  let localStorageTasks
+  if (localStorage.getItem('tasks') === null) {
+    localStorageTasks = []
+  } else {
+    localStorageTasks = JSON.parse(localStorage.getItem('tasks'))
   }
-  checkUI()
+  return localStorageTasks
+}
+
+function onClickTask(e) {
+  if (e.target.parentElement.classList.contains('remove-task')) {
+    removeTask(e.target.parentElement.parentElement)
+  }
+}
+
+function removeTask(task) {
+  if (confirm('Are You Sure ? ')) {
+    // Remove task from DOM
+    task.remove()
+    // Remove Task from LocalStorage
+    removeTaskFromStorage(task.textContent)
+
+    checkUI()
+  }
+}
+
+function removeTaskFromStorage(task) {
+  let localStorageTasks = getTaskFromStorage()
+  localStorageTasks = localStorageTasks.filter((t) => t !== task)
+
+  localStorage.setItem('tasks', JSON.stringify(localStorageTasks))
 }
 
 function clear() {
   while (taskList.firstChild) {
     taskList.removeChild(taskList.firstChild)
   }
+  // Remove From local storage as well
+  localStorage.removeItem('tasks')
   checkUI()
 }
 
@@ -76,8 +123,9 @@ function filterAll(e) {
 }
 
 taskForm.addEventListener('submit', addTask)
-taskList.addEventListener('click', removeTask)
+taskList.addEventListener('click', onClickTask)
 clearAll.addEventListener('click', clear)
 filter.addEventListener('input', filterAll)
+document.addEventListener('DOMContentLoaded', displayTasks)
 
 checkUI()
