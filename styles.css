@@ -104,6 +104,10 @@ img {
   color: green;
 }
 
+.edit-mode {
+  color: #ccc;
+}
+
 /* Items */
 
 .tasks {

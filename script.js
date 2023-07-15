@@ -3,6 +3,8 @@ const taskInput = document.querySelector('#task-input')
 const taskList = document.querySelector('#task-list')
 const clearAll = document.querySelector('#clear')
 const filter = document.querySelector('#filter')
+const formBtn = taskForm.querySelector('button')
+let editingTask = false
 
 function displayTasks() {
   const tasksFromStorage = getTaskFromStorage()
@@ -16,6 +18,19 @@ function addTask(e) {
   if (task === '') {
     alert('Please Enter Any Task !')
     return
+  }
+  // Check Edit Mode
+  if (editingTask == true) {
+    const currentTask = taskList.querySelector('.edit-mode')
+    removeTaskFromStorage(currentTask.innerText)
+    currentTask.classList.remove('edit-mode')
+    currentTask.remove()
+    editingTask = false
+  } else {
+    if (taskExists(task)) {
+      alert('Already Exists!')
+      return
+    }
   }
   addToDOM(task)
   addToLocalStorage(task)
@@ -68,7 +83,28 @@ function getTaskFromStorage() {
 function onClickTask(e) {
   if (e.target.parentElement.classList.contains('remove-task')) {
     removeTask(e.target.parentElement.parentElement)
+  } else {
+    editTask(e.target)
   }
+}
+
+function editTask(task) {
+  editingTask = true
+  taskList
+    .querySelectorAll('li')
+    .forEach((i) => i.classList.remove('edit-mode'))
+  task.classList.add('edit-mode')
+  formBtn.innerHTML = '<i class="fa-solid fa-pen"></i> Update Task'
+  formBtn.style.backgroundColor = '#228b22'
+  taskInput.value = task.textContent
+}
+
+function taskExists(task) {
+  const allTasks = getTaskFromStorage()
+  if (allTasks.includes(task)) {
+    return true
+  }
+  return false
 }
 
 function removeTask(task) {
@@ -85,7 +121,6 @@ function removeTask(task) {
 function removeTaskFromStorage(task) {
   let localStorageTasks = getTaskFromStorage()
   localStorageTasks = localStorageTasks.filter((t) => t !== task)
-
   localStorage.setItem('tasks', JSON.stringify(localStorageTasks))
 }
 
@@ -99,6 +134,7 @@ function clear() {
 }
 
 function checkUI() {
+  taskInput.value = ''
   const tasks = document.querySelectorAll('li')
   if (tasks.length === 0) {
     clearAll.style.display = 'none'
@@ -107,6 +143,9 @@ function checkUI() {
     clearAll.style.display = 'block'
     filter.style.display = 'block'
   }
+  editingTask = false
+  formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Task'
+  formBtn.style.backgroundColor = '#333'
 }
 
 function filterAll(e) {
