@@ -108,7 +108,7 @@ function taskExists(task) {
 }
 
 function removeTask(task) {
-  if (confirm('Are You Sure ? ')) {
+  if (confirm('Is This Task Completed ? ')) {
     // Remove task from DOM
     task.remove()
     // Remove Task from LocalStorage
