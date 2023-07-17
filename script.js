@@ -125,12 +125,14 @@ function removeTaskFromStorage(task) {
 }
 
 function clear() {
-  while (taskList.firstChild) {
-    taskList.removeChild(taskList.firstChild)
+  if (confirm('Are all tasks completed?')) {
+    while (taskList.firstChild) {
+      taskList.removeChild(taskList.firstChild)
+    }
+    // Remove From local storage as well
+    localStorage.removeItem('tasks')
+    checkUI()
   }
-  // Remove From local storage as well
-  localStorage.removeItem('tasks')
-  checkUI()
 }
 
 function checkUI() {
